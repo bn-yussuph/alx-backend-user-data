@@ -4,12 +4,13 @@ Manage API authentication system
 """
 from flask import request
 from typing import List, TypeVar
-
+from os import getenv
 
 class Auth():
     """
     Manage API authentication methods
     """
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Return boolean """
         if path is None or excluded_paths is None or not len(excluded_paths):
@@ -40,3 +41,9 @@ class Auth():
     def current_user(self, request=None) -> TypeVar('User'):
         """ Flask request object """
         return None
+
+    def session_cookie(self, request=None):
+        if request is None:
+            return None
+        cookie = getenv("SESSION_NAME")
+        return request.cookies.get(cookie)

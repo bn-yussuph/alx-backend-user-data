@@ -11,6 +11,7 @@ import base64
 class BasicAuth(Auth):
     """ Extends BasicAuth class
     """
+
     def extract_base64_authorization_header(self, auth_header: str) -> str:
         """ Extract base64 authorization header """
         if auth_header is None or not isinstance(auth_header, str):
