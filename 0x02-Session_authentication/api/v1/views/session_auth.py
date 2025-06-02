@@ -7,7 +7,8 @@ from models.user import User
 from os import getenv
 
 
-@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
+@app_views.route('/auth_session/login',
+                 methods=['POST'], strict_slashes=False)
 def create_session() -> str:
     """ POST /api/v1/auth_session/login
     Return:
@@ -16,7 +17,7 @@ def create_session() -> str:
     email = request.form.get('email')
 
     if not email:
-        return jsonify({"email": "email missing"}), 400
+        return jsonify({"error": "email missing"}), 400
 
     password = request.form.get('password')
 
@@ -46,3 +47,20 @@ def create_session() -> str:
     response.set_cookie(SESSION_NAME, session_id)
 
     return response
+
+
+@app_views.route('/auth_session/logout',
+                 methods=['DELETE'], strict_slashes=False)
+def logout():
+    """DELETE   /auth_session/logout
+    Returns:
+        - Empty dictionary if successful
+    """
+    from api.v1.app import auth
+
+    deleted = auth.destroy_session(request)
+
+    if not deleted:
+        abort(404)
+
+    return jsonify({})
