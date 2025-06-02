@@ -22,7 +22,7 @@ def create_session() -> str:
     password = request.form.get('password')
 
     if not password:
-        return jsonify({"error": "password missing"})
+        return jsonify({"error": "password missing"}), 400
 
     try:
         found_users = User.search({'email': email})
