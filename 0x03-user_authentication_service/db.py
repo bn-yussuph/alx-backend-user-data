@@ -48,6 +48,8 @@ class DB:
         Args: keyword args of attributes
         Return: a found user
         """
+        if not kwargs:
+            raise InvalidRequestError
         user_keys = ['id', 'email', 'hashed_password',
                      'session_id', 'reset_token']
         for key in kwargs.keys():
