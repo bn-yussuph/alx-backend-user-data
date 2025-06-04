@@ -3,6 +3,7 @@
 """
 import bcrypt
 
+
 def _hash_password(password: str) -> str:
     """ Return a salted hash of the password
     """
