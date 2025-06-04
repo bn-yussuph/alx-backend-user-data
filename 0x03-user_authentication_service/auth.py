@@ -2,6 +2,7 @@
 """" Auth module
 """
 import bcrypt
+import uuid
 from sqlalchemy.orm.exc import NoResultFound
 from db import DB
 from user import User
@@ -16,6 +17,15 @@ def _hash_password(password: str) -> str:
     hpw = bcrypt.hashpw(bytes, salt)
 
     return hpw
+
+
+def _generate_uuid() -> str:
+    """ Generate a uuid code
+    Args: None
+    Returns: a uuid code as a string
+    """
+    code = uuid.uuid4()
+    return str(code)
 
 
 class Auth:
@@ -36,3 +46,35 @@ class Auth:
             return new_user
         else:
             raise ValueError(f'User {email} already exists.')
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """ Check for valid credentials
+        Args: email amd password
+        Return: bool
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return False
+
+        user_password = user.hashed_password
+        encoded_password = password.encode()
+
+        if bcrypt.checkpw(encoded_password, user_password):
+            return True
+        return False
+
+    def create_session(self, email: str) -> str:
+        """ Find a user and create a seesion for him
+        Args: email
+        Return: session Id or None
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return None
+        ses_id = _generate_uuid()
+
+        self._db.update_user(user.id, session_id=ses_id)
+
+        return ses_id
