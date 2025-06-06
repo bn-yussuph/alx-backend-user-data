@@ -133,5 +133,5 @@ class Auth:
             raise ValueError
         hash_pw = _hash_password(password)
         self._db.update_user(user.id,
-                             hash_password=hash_pw,
+                             hashed_password=hash_pw,
                              reset_token=None)
