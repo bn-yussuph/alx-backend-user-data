@@ -112,7 +112,7 @@ def update_password():
         AUTH.update_password(token, new_pw)
     except ValueError:
         abort(403)
-    msg = {"email": email, "message": "Passwrd updated"}
+    msg = {"email": email, "message": "Password updated"}
     return jsonify(msg), 200
 
 
